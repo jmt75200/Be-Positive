@@ -44,21 +44,49 @@ BloodTransfusionRules = {
    * }
    * 
    */
-   bank_inventory : function (blood_inventory, compatible_type){
-      //reduce to the highest amount within the compatible_type array
-      return compatible_type.reduce(function (prev, curr){
+   // bank_inventory : function (blood_inventory, compatible_type){
+   //    //reduce to the highest amount within the compatible_type array
+   //    return compatible_type.reduce(function (prev, curr){
+   //      if (blood_inventory[ curr ] > blood_inventory[ prev ]){
+   //        return curr;
+   //      }else{
+   //        return prev;
+   //      }
+   //    });
+   // },
+
+
+  receive_patient : function (blood_inventory, patient) {
+
+    var compatibleType = {
+      AB_POS : [ BloodType.AB_POS, BloodType.B_POS, BloodType.A_POS, BloodType.B_NEG, BloodType.AB_NEG, BloodType.A_NEG ],
+      
+      AB_NEG : [ BloodType.B_NEG, BloodType.AB_NEG, BloodType.A_NEG ],
+
+      B_POS : [ BloodType.O_POS, BloodType.B_POS, BloodType.B_NEG ],
+
+      B_NEG : [ BloodType.B_NEG, BloodType.O_NEG ],
+
+      A_POS : [ BloodType.A_NEG, BloodType.A_POS ],
+
+      A_NEG : [ BloodType.A_NEG, BloodType.O_NEG ],
+
+      O_POS : [ BloodType.O_POS, BloodType.O_NEG ],
+
+      O_NEG : [ BloodType.O_NEG ],
+    };
+
+    var compatiblePatients = compatibleType[patient.blood_type];
+    console.log( patient.blood_type,compatiblePatients );
+
+    return compatiblePatients.reduce(function (prev, curr){
         if (blood_inventory[ curr ] > blood_inventory[ prev ]){
           return curr;
         }else{
           return prev;
         }
-      });
-   },
-
-
-  receive_patient : function (blood_inventory, patient) {
-
-    var compatible_type = [];
+    });
+   /*var compatible_type = [];
 
     switch (patient.blood_type){
       
@@ -67,27 +95,27 @@ BloodTransfusionRules = {
        break;
 
       case BloodType.AB_NEG:
-        compatible_type = [BloodType.B_NEG, BloodType.AB_NEG, BloodType.A_NEG];
+        compatible_type = [ BloodType.B_NEG, BloodType.AB_NEG, BloodType.A_NEG ];
         break;
 
       case BloodType.B_POS:
-        compatible_type = [BloodType.O_POS, BloodType.B_POS, BloodType.B_NEG];
+        compatible_type = [ BloodType.O_POS, BloodType.B_POS, BloodType.B_NEG ];
         break;
 
       case BloodType.B_NEG:
-        compatible_type = [BloodType.B_NEG, BloodType.O_NEG];
+        compatible_type = [ BloodType.B_NEG, BloodType.O_NEG ];
         break;
 
       case BloodType.A_POS:
-        compatible_type = [BloodType.A_NEG, BloodType.A_POS];
+        compatible_type = [ BloodType.A_NEG, BloodType.A_POS ];
         break;
 
       case BloodType.A_NEG:
-        compatible_type = [ BloodType.A_NEG, BloodType.O_NEG];
+        compatible_type = [ BloodType.A_NEG, BloodType.O_NEG ];
         break;
 
       case BloodType.O_POS:
-        compatible_type = [BloodType.O_POS, BloodType.O_NEG];
+        compatible_type = [ BloodType.O_POS, BloodType.O_NEG ];
         break;
 
       case BloodType.O_NEG:
@@ -95,9 +123,10 @@ BloodTransfusionRules = {
  
     }
 
+    return this.bank_inventory( blood_inventory, compatible_type );
+   */
     // //if donor blood type === patient blood type 
     // return patient.blood_type;
-    return this.bank_inventory( blood_inventory, compatible_type );
 
     // give a random blood type to anyone
     // very bad idea!
